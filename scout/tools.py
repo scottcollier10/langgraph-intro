@@ -26,7 +26,7 @@ class ServerSession:
         if self.engine is None:
             # Configure SQLAlchemy for session pooling
             _engine = create_engine(
-                env.SUPABASE_URL,
+                env.DATABASE_URI,
                 pool_size=5,                # Smaller pool size since the pooler manages connections
                 max_overflow=5,             # Fewer overflow connections needed
                 pool_timeout=10,            # Shorter timeout for getting connections
@@ -35,7 +35,7 @@ class ServerSession:
                 pool_use_lifo=True,         # Keep LIFO to reduce number of open connections
                 connect_args={
                     "application_name": "onlyvans_agent",
-                    "options": "-c statement_timeout=30000",
+                    "options": "-c statement_timeout=30000 -c search_path=onlyvans,public",
                     # Keepalives less important with transaction pooler but still good practice
                     "keepalives": 1,
                     "keepalives_idle": 60,
